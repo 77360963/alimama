@@ -31,10 +31,10 @@ public class UnicodeUtil {
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String s = stringtoUnicode("ÖĞÎÄ");
-		System.out.println("±àÂë£º"+s);
+		String s = stringtoUnicode("ä¸­æ–‡");
+		System.out.println("ç¼–ç ï¼š"+s);
 		String s1 = unicodetoString(s);
-		System.out.println("½âÂë£º"+s1);
+		System.out.println("è§£ç ï¼š"+s1);
  
 	}
 

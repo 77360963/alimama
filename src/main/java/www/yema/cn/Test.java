@@ -15,7 +15,7 @@ public class Test {
 		maps.put("coupon", "1");
 		maps.put("p", "1");   
 		maps.put("sort", "0");   
-		maps.put("k", "£¤gvTyblx9az2£¤");        
+		maps.put("k", "ï¿¥gvTyblx9az2ï¿¥");        
 		String body=HttpClientUtil.getInstance().sendHttpPost(httpUrl, maps);     
 		System.out.println(body);
 

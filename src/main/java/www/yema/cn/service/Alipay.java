@@ -4,7 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import www.yema.cn.pojo.conpon.ConponBean;
+import www.yema.cn.pojo.conpon.Map_data;
+import www.yema.cn.pojo.conpon.Result_list;
+import www.yema.cn.pojo.generateShare.Data;
+import www.yema.cn.pojo.generateShare.GenerateShare;
+import www.yema.cn.pojo.product.ProductBean;
+import www.yema.cn.pojo.product.Results;
+import www.yema.cn.service.parse.IProductIdParse;
+import www.yema.cn.utils.HttpClientUtil;
 
 import com.alibaba.fastjson.JSON;
 import com.taobao.api.ApiException;
@@ -17,17 +32,11 @@ import com.taobao.api.response.TbkDgMaterialOptionalResponse;
 import com.taobao.api.response.TbkItemInfoGetResponse;
 import com.taobao.api.response.TbkTpwdCreateResponse;
 
-import www.yema.cn.pojo.conpon.ConponBean;
-import www.yema.cn.pojo.conpon.Map_data;
-import www.yema.cn.pojo.conpon.Result_list;
-import www.yema.cn.pojo.generateShare.Data;
-import www.yema.cn.pojo.generateShare.GenerateShare;
-import www.yema.cn.pojo.product.ProductBean;
-import www.yema.cn.pojo.product.Results;
-import www.yema.cn.utils.HttpClientUtil;
-
+@Service
 public class Alipay {
-
+    
+    @Resource(name="mmfadProductIdParse")
+    private IProductIdParse productIdParse;
 	
 	public static String url="http://gw.api.taobao.com/router/rest";
 	public static String appkey="25245534";
@@ -35,22 +44,21 @@ public class Alipay {
 	
 	
 	
-	public static String getShare(String context) throws ApiException {		
-        //1.»ñÈ¡ÍÆ¼öÉÌÆ·id
-		String productId=getProductIdByOutShareUrl(context); 		
+	public  String getShare(String context) throws ApiException {		    
+       //1.è·å–æ¨èå•†å“id
+		String productId= productIdParse.getProductId(context);
 		if(StringUtils.isBlank(productId)) {			
-			return "Î´ÕÒµ½Ïà¹ØĞÅÏ¢";
+			return "æœªæ‰¾åˆ°ç›¸å…³ä¿¡æ¯";
 		}		
 		
-		//2.  »ñÈ¡ÉÌÆ·title
+		//2.  è·å–å•†å“title
 		String ProductTitle=getProductTitle(productId);
 		
-		//3. »ñÈ¡ÓÅ»İÈ¯
+		//3. è·å–ä¼˜æƒ åˆ¸
 		String Conpon=getConpon(ProductTitle);
 		
-		//4.»ñÈ¡ÍÆ¹ã
+		//4.è·å–æ¨å¹¿
 		String generate=generateShare(Conpon);
-		
 
         return generate;
 		
@@ -63,8 +71,8 @@ public class Alipay {
 	 * @return
 	 */
 	public static String getProductIdByOutShareUrl(String outShareContext) {
-		int contextStartIndex=outShareContext.indexOf("£¤");
-		int contextEndIndex=outShareContext.lastIndexOf("£¤")+1;
+		int contextStartIndex=outShareContext.indexOf("ï¿¥");
+		int contextEndIndex=outShareContext.lastIndexOf("ï¿¥")+1;
 		String outShare=outShareContext.substring(contextStartIndex, contextEndIndex);
 		//System.out.println(outShare);		
 		String httpUrl = "http://quan.mmfad.com/";;                                             
@@ -90,7 +98,7 @@ public class Alipay {
 	
 	
 	/**
-	 *   »ñÈ¡ÉÌÆ·title
+	 *   è·å–å•†å“title
 	 * @return
 	 * @throws ApiException
 	 */
@@ -110,7 +118,7 @@ public class Alipay {
 	}
 	
 	/**
-	 * »ñÈ¡ÓÅ»İÈ¯
+	 * è·å–ä¼˜æƒ åˆ¸
 	 * @param productTitle
 	 * @return
 	 * @throws ApiException
@@ -136,7 +144,7 @@ public class Alipay {
 	public static String generateShare(String productHref) throws ApiException {
 		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 		TbkTpwdCreateRequest req = new TbkTpwdCreateRequest();
-		req.setText("ÎâÏşÀö·ÖÏíµÄÁ´½Ó");
+		req.setText("å´æ™“ä¸½åˆ†äº«çš„é“¾æ¥");
 		req.setUrl(productHref);
 		req.setLogo("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=511778976,2722131452&fm=173&app=49&f=JPEG?w=640&h=358&s=9A384E864C511BC028B5356703008076");
 		TbkTpwdCreateResponse response = client.execute(req);
@@ -152,22 +160,22 @@ public class Alipay {
 	
 	public static  void main(String[] args) throws ApiException {		
 		
-		String context="¸´ÖÆÕâÌõĞÅÏ¢£¬£¤63ATblD1JFg£¤ £¬´ò¿ª¡¾ÊÖ»úÌÔ±¦¡¿¼´¿É²é¿´\r\n" + "";
+		String context="å¤åˆ¶è¿™æ¡ä¿¡æ¯ï¼Œï¿¥63ATblD1JFgï¿¥ ï¼Œæ‰“å¼€ã€æ‰‹æœºæ·˜å®ã€‘å³å¯æŸ¥çœ‹\r\n" + "";
 		
-		//1.»ñÈ¡ÍÆ¼öÉÌÆ·id
+		//1.è·å–æ¨èå•†å“id
 		String productId=getProductIdByOutShareUrl(context); 		
 		if(StringUtils.isBlank(productId)) {
-			System.out.println("Î´ÕÒµ½ÉÌÆ·");
+			System.out.println("æœªæ‰¾åˆ°å•†å“");
 			return;
 		}		
 		
-		//2.  »ñÈ¡ÉÌÆ·title
+		//2.  è·å–å•†å“title
 		String ProductTitle=getProductTitle(productId);
 		
-		//3. »ñÈ¡ÓÅ»İÈ¯
+		//3. è·å–ä¼˜æƒ åˆ¸
 		String Conpon=getConpon(ProductTitle);
 		
-		//4.»ñÈ¡ÍÆ¹ã
+		//4.è·å–æ¨å¹¿
 		String generate=generateShare(Conpon);
 		
 		System.out.println(generate);

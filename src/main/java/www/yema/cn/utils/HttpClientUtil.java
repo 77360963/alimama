@@ -23,9 +23,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 public class HttpClientUtil {
-	private static final RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000) // ÉèÖÃÁ¬½Ó³¬Ê±Ê±¼ä£¬µ¥Î»ºÁÃë¡£
-			.setConnectionRequestTimeout(1000) // ÉèÖÃ´Óconnect Manager»ñÈ¡Connection ³¬Ê±Ê±¼ä£¬µ¥Î»ºÁÃë¡£Õâ¸öÊôĞÔÊÇĞÂ¼ÓµÄÊôĞÔ£¬ÒòÎªÄ¿Ç°°æ±¾ÊÇ¿ÉÒÔ¹²ÏíÁ¬½Ó³ØµÄ¡£
-			.setSocketTimeout(30000).build(); // ÇëÇó»ñÈ¡Êı¾İµÄ³¬Ê±Ê±¼ä£¬µ¥Î»ºÁÃë¡£ Èç¹û·ÃÎÊÒ»¸ö½Ó¿Ú£¬¶àÉÙÊ±¼äÄÚÎŞ·¨·µ»ØÊı¾İ£¬¾ÍÖ±½Ó·ÅÆú´Ë´Îµ÷ÓÃ¡£
+	private static final RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000) // è®¾ç½®è¿æ¥è¶…æ—¶æ—¶é—´ï¼Œå•ä½æ¯«ç§’ã€‚
+			.setConnectionRequestTimeout(1000) // è®¾ç½®ä»connect Managerè·å–Connection è¶…æ—¶æ—¶é—´ï¼Œå•ä½æ¯«ç§’ã€‚è¿™ä¸ªå±æ€§æ˜¯æ–°åŠ çš„å±æ€§ï¼Œå› ä¸ºç›®å‰ç‰ˆæœ¬æ˜¯å¯ä»¥å…±äº«è¿æ¥æ± çš„ã€‚
+			.setSocketTimeout(30000).build(); // è¯·æ±‚è·å–æ•°æ®çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½æ¯«ç§’ã€‚ å¦‚æœè®¿é—®ä¸€ä¸ªæ¥å£ï¼Œå¤šå°‘æ—¶é—´å†…æ— æ³•è¿”å›æ•°æ®ï¼Œå°±ç›´æ¥æ”¾å¼ƒæ­¤æ¬¡è°ƒç”¨ã€‚
 
 	private static HttpClientUtil instance = null;
 
@@ -40,25 +40,25 @@ public class HttpClientUtil {
 	}
 
 	/**
-	 * ·¢ËÍ postÇëÇó
+	 * å‘é€ postè¯·æ±‚
 	 * 
-	 * @param httpUrl µØÖ·
+	 * @param httpUrl åœ°å€
 	 */
 	public String sendHttpPost(String httpUrl) {
-		HttpPost httpPost = new HttpPost(httpUrl);// ´´½¨httpPost
+		HttpPost httpPost = new HttpPost(httpUrl);// åˆ›å»ºhttpPost
 		return sendHttpPost(httpPost);
 	}
 
 	/**
-	 * ·¢ËÍ postÇëÇó
+	 * å‘é€ postè¯·æ±‚
 	 * 
-	 * @param httpUrl µØÖ·
-	 * @param params  ²ÎÊı(¸ñÊ½:key1=value1&key2=value2)
+	 * @param httpUrl åœ°å€
+	 * @param params  å‚æ•°(æ ¼å¼:key1=value1&key2=value2)
 	 */
 	public String sendHttpPost(String httpUrl, String params) {
-		HttpPost httpPost = new HttpPost(httpUrl);// ´´½¨httpPost
+		HttpPost httpPost = new HttpPost(httpUrl);// åˆ›å»ºhttpPost
 		try {
-			// ÉèÖÃ²ÎÊı
+			// è®¾ç½®å‚æ•°
 			StringEntity stringEntity = new StringEntity(params, "UTF-8");
 			stringEntity.setContentType("application/x-www-form-urlencoded");
 			httpPost.setEntity(stringEntity);
@@ -69,14 +69,14 @@ public class HttpClientUtil {
 	}
 
 	/**
-	 * ·¢ËÍ postÇëÇó
+	 * å‘é€ postè¯·æ±‚
 	 * 
-	 * @param httpUrl µØÖ·
-	 * @param maps    ²ÎÊı
+	 * @param httpUrl åœ°å€
+	 * @param maps    å‚æ•°
 	 */
 	public String sendHttpPost(String httpUrl, Map<String, String> maps) {
-		HttpPost httpPost = new HttpPost(httpUrl);// ´´½¨httpPost
-		// ´´½¨²ÎÊı¶ÓÁĞ
+		HttpPost httpPost = new HttpPost(httpUrl);// åˆ›å»ºhttpPost
+		// åˆ›å»ºå‚æ•°é˜Ÿåˆ—
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		for (String key : maps.keySet()) {
 			nameValuePairs.add(new BasicNameValuePair(key, maps.get(key)));
@@ -90,7 +90,7 @@ public class HttpClientUtil {
 	}
 
 	/**
-	 * ·¢ËÍPostÇëÇó
+	 * å‘é€Postè¯·æ±‚
 	 * 
 	 * @param httpPost
 	 * @return
@@ -101,13 +101,13 @@ public class HttpClientUtil {
 		HttpEntity entity = null;
 		String responseContent = null;
 		try {
-			// ´´½¨Ä¬ÈÏµÄhttpClientÊµÀı.
+			// åˆ›å»ºé»˜è®¤çš„httpClientå®ä¾‹.
 			httpClient = HttpClients.createDefault();
 			httpPost.setConfig(requestConfig);
-			// Ö´ĞĞÇëÇó
+			// æ‰§è¡Œè¯·æ±‚
 			response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
-			//´¦Àíhttp·µ»ØÂë302µÄÇé¿ö
+			//å¤„ç†httpè¿”å›ç 302çš„æƒ…å†µ
 			if (response.getStatusLine().getStatusCode() == 302) {
 				String locationUrl=response.getLastHeader("Location").getValue();
 				responseContent="302:"+locationUrl;
@@ -119,7 +119,7 @@ public class HttpClientUtil {
 			e.printStackTrace();
 		} finally {
 			try {
-				// ¹Ø±ÕÁ¬½Ó,ÊÍ·Å×ÊÔ´
+				// å…³é—­è¿æ¥,é‡Šæ”¾èµ„æº
 				if (response != null) {
 					response.close();
 				}
@@ -134,27 +134,27 @@ public class HttpClientUtil {
 	}
 
 	/**
-	 * ·¢ËÍ getÇëÇó
+	 * å‘é€ getè¯·æ±‚
 	 * 
 	 * @param httpUrl
 	 */
 	public String sendHttpGet(String httpUrl) {
-		HttpGet httpGet = new HttpGet(httpUrl);// ´´½¨getÇëÇó
+		HttpGet httpGet = new HttpGet(httpUrl);// åˆ›å»ºgetè¯·æ±‚
 		return sendHttpGet(httpGet);
 	}
 
 	/**
-	 * ·¢ËÍ getÇëÇóHttps
+	 * å‘é€ getè¯·æ±‚Https
 	 * 
 	 * @param httpUrl
 	 */
 	public String sendHttpsGet(String httpUrl) {
-		HttpGet httpGet = new HttpGet(httpUrl);// ´´½¨getÇëÇó
+		HttpGet httpGet = new HttpGet(httpUrl);// åˆ›å»ºgetè¯·æ±‚
 		return sendHttpsGet(httpGet);
 	}
 
 	/**
-	 * ·¢ËÍGetÇëÇó
+	 * å‘é€Getè¯·æ±‚
 	 * 
 	 * @param httpPost
 	 * @return
@@ -165,10 +165,10 @@ public class HttpClientUtil {
 		HttpEntity entity = null;
 		String responseContent = null;
 		try {
-			// ´´½¨Ä¬ÈÏµÄhttpClientÊµÀı.
+			// åˆ›å»ºé»˜è®¤çš„httpClientå®ä¾‹.
 			httpClient = HttpClients.createDefault();
 			httpGet.setConfig(requestConfig);
-			// Ö´ĞĞÇëÇó
+			// æ‰§è¡Œè¯·æ±‚
 			response = httpClient.execute(httpGet);
 			entity = response.getEntity();
 			responseContent = EntityUtils.toString(entity, "UTF-8");
@@ -176,7 +176,7 @@ public class HttpClientUtil {
 			e.printStackTrace();
 		} finally {
 			try {
-				// ¹Ø±ÕÁ¬½Ó,ÊÍ·Å×ÊÔ´
+				// å…³é—­è¿æ¥,é‡Šæ”¾èµ„æº
 				if (response != null) {
 					response.close();
 				}
@@ -191,7 +191,7 @@ public class HttpClientUtil {
 	}
 
 	/**
-	 * ·¢ËÍGetÇëÇóHttps
+	 * å‘é€Getè¯·æ±‚Https
 	 * 
 	 * @param httpPost
 	 * @return
@@ -202,13 +202,13 @@ public class HttpClientUtil {
 		HttpEntity entity = null;
 		String responseContent = null;
 		try {
-			// ´´½¨Ä¬ÈÏµÄhttpClientÊµÀı.
+			// åˆ›å»ºé»˜è®¤çš„httpClientå®ä¾‹.
 			PublicSuffixMatcher publicSuffixMatcher = PublicSuffixMatcherLoader
 					.load(new URL(httpGet.getURI().toString()));
 			DefaultHostnameVerifier hostnameVerifier = new DefaultHostnameVerifier(publicSuffixMatcher);
 			httpClient = HttpClients.custom().setSSLHostnameVerifier(hostnameVerifier).build();
 			httpGet.setConfig(requestConfig);
-			// Ö´ĞĞÇëÇó
+			// æ‰§è¡Œè¯·æ±‚
 			response = httpClient.execute(httpGet);
 			entity = response.getEntity();
 			responseContent = EntityUtils.toString(entity, "UTF-8");
@@ -216,7 +216,7 @@ public class HttpClientUtil {
 			e.printStackTrace();
 		} finally {
 			try {
-				// ¹Ø±ÕÁ¬½Ó,ÊÍ·Å×ÊÔ´
+				// å…³é—­è¿æ¥,é‡Šæ”¾èµ„æº
 				if (response != null) {
 					response.close();
 				}
