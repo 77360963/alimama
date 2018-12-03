@@ -1,4 +1,4 @@
-package www.yema.cn.service;
+package www.yema.cn.manager;
 
 import java.util.HashMap;
 import java.util.List;

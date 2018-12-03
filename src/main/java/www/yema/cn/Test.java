@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import www.yema.cn.utils.HttpClientUtil;
+import www.yema.cn.utils.UnicodeUtil;
 
 public class Test {
 	
 	public static void main(String[] args) {
-		String httpUrl = "http://quan.mmfad.com/";;                                             
+		
+		String a=UnicodeUtil.stringtoUnicode("￥SPBQblxQXHC￥");
+		System.out.println(a);
+		
+		/*String httpUrl = "http://quan.mmfad.com/";;                                             
 		Map<String, String> maps = new HashMap<String, String>();                                            
 		maps.put("b2c", "0");                                             
 		maps.put("channel", "1");        
@@ -17,7 +22,7 @@ public class Test {
 		maps.put("sort", "0");   
 		maps.put("k", "￥gvTyblx9az2￥");        
 		String body=HttpClientUtil.getInstance().sendHttpPost(httpUrl, maps);     
-		System.out.println(body);
+		System.out.println(body);*/
 
 	}
 
