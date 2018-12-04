@@ -1,6 +1,6 @@
-package www.yema.cn.vo;
+package www.yema.cn.response;
 
-public class ProductVo {
+public class ProductResponse {
 	
 	/**
 	 * 标题
@@ -16,6 +16,11 @@ public class ProductVo {
          * 商品一口价格
      */
 	private String reservePrice;
+	
+	/**
+	 * 商品URL
+	 */
+	private String itemUrl;
 
 	public String getTitle() {
 		return title;
@@ -40,7 +45,13 @@ public class ProductVo {
 	public void setReservePrice(String reservePrice) {
 		this.reservePrice = reservePrice;
 	}
-	
-	
+
+    public String getItemUrl() {
+        return itemUrl;
+    }
+
+    public void setItemUrl(String itemUrl) {
+        this.itemUrl = itemUrl;
+    }
 
 }

@@ -108,7 +108,7 @@ public class Alipay {
 		req.setNumIids(productId);
 		TbkItemInfoGetResponse response = client.execute(req);
 		String body=response.getBody();	
-		//System.out.println(body);		
+		System.out.println(body);		
 		ProductBean infoDo = JSON.parseObject(body, ProductBean.class);		
 		Results results=infoDo.getTbk_item_info_get_response().getResults();
 		String title=results.getN_tbk_item().get(0).getTitle();	
@@ -127,11 +127,11 @@ public class Alipay {
 		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 		TbkDgMaterialOptionalRequest req = new TbkDgMaterialOptionalRequest();
 		req.setQ(productTitle);
-		req.setHasCoupon(true);
+		//req.setHasCoupon(true);
 		req.setAdzoneId(60129500330L);
 		TbkDgMaterialOptionalResponse response = client.execute(req);
 		String body=response.getBody();		
-		//System.out.println(body);
+		System.out.println(body);
 		ConponBean conponBean=JSON.parseObject(body, ConponBean.class);
 		Result_list result_list=conponBean.getTbk_dg_material_optional_response().getResult_list();
 		List<Map_data> list=result_list.getMap_data();
@@ -144,12 +144,13 @@ public class Alipay {
 	public static String generateShare(String productHref) throws ApiException {
 		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 		TbkTpwdCreateRequest req = new TbkTpwdCreateRequest();
+	
 		req.setText("吴晓丽分享的链接");
 		req.setUrl(productHref);
 		req.setLogo("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=511778976,2722131452&fm=173&app=49&f=JPEG?w=640&h=358&s=9A384E864C511BC028B5356703008076");
 		TbkTpwdCreateResponse response = client.execute(req);
 		String body=response.getBody();		
-		//System.out.println(body);
+		System.out.println(body);
 		GenerateShare generateShare=JSON.parseObject(body, GenerateShare.class);
 		Data data=generateShare.getTbk_tpwd_create_response().getData();
 		String generateShareHref=data.getModel();
@@ -160,7 +161,7 @@ public class Alipay {
 	
 	public static  void main(String[] args) throws ApiException {		
 		
-		String context="复制这条信息，￥63ATblD1JFg￥ ，打开【手机淘宝】即可查看\r\n" + "";
+		/*String context="复制这条信息，￥63ATblD1JFg￥ ，打开【手机淘宝】即可查看\r\n" + "";
 		
 		//1.获取推荐商品id
 		String productId=getProductIdByOutShareUrl(context); 		
@@ -168,17 +169,17 @@ public class Alipay {
 			System.out.println("未找到商品");
 			return;
 		}		
-		
+		*/
 		//2.  获取商品title
-		String ProductTitle=getProductTitle(productId);
+		//String ProductTitle=getProductTitle("580005845251");
 		
 		//3. 获取优惠券
-		String Conpon=getConpon(ProductTitle);
+		//String Conpon=getConpon("https://detail.tmall.com/item.htm?id=580005845251");
 		
-		//4.获取推广
-		String generate=generateShare(Conpon);
+	    //4.获取推广
+		String generate=generateShare( "https://s.click.taobao.com/t?e=m=2&s=ZFwr0s1u5u4cQipKwQzePOeEDrYVVa64r4ll3HtqqoxyINtkUhsv0OJLaroXyzbsn0VGlIPb7USFcmYXXLluy68FHzwBdWokczuL0JQjXe1OnWMaFs0m5vAy/ay3dFHhT71z1SCuevui5SPojJP5jQcJF/lBkX5mkRIxIi9Kdk7qS/XCXzX7tYiN0ijCHW6y9RgW3atW8fxK5EQ/mGhs0MYl7w3/A2kb&scm=null&pvid=100_11.182.43.223_161229_1561543906337551863&app_pvid=59590_11.11.115.140_35458_1543906337544&ptl=floorId:2836;pvid:100_11.182.43.223_161229_1561543906337551863;app_pvid:59590_11.11.115.140_35458_1543906337544&union_lens=lensId:0b0b738c_80a0_16777fd231d_ad6e");
 		
-		System.out.println(generate);
+		//System.out.println(generate);
 
 	}
 

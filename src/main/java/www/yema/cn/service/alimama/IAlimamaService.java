@@ -1,7 +1,10 @@
 package www.yema.cn.service.alimama;
 
-import www.yema.cn.vo.ConponVo;
-import www.yema.cn.vo.ProductVo;
+import java.util.List;
+
+import www.yema.cn.request.ConponRequest;
+import www.yema.cn.response.ConponResponse;
+import www.yema.cn.response.ProductResponse;
 
 public interface IAlimamaService {
 	
@@ -17,15 +20,14 @@ public interface IAlimamaService {
 	 * @param productId
 	 * @return
 	 */
-	public ProductVo getProductTitle(String productId);
+	public ProductResponse getProductInfo(String productId);
 	
 	/**
-	 * 根据商品名称,商品Id获取优惠券信息
-	 * @param productTitle
-	 * @param productId
+	 * 根据条件查询获取优惠券信息
+	 * @param productContext
 	 * @return
 	 */
-	public ConponVo getConpon(String productTitle,String productId);
+	public List<ConponResponse> getConpon(ConponRequest conponRequest);
 	
 	/**
 	 * 生成推荐者的淘口令

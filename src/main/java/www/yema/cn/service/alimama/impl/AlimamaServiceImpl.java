@@ -1,10 +1,29 @@
 package www.yema.cn.service.alimama.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import www.yema.cn.pojo.conpon.ConponBean;
+import www.yema.cn.pojo.conpon.Map_data;
+import www.yema.cn.pojo.conpon.Result_list;
+import www.yema.cn.pojo.conpon.Tbk_dg_material_optional_response;
+import www.yema.cn.pojo.generateShare.Data;
+import www.yema.cn.pojo.generateShare.GenerateShare;
+import www.yema.cn.pojo.product.N_tbk_item;
+import www.yema.cn.pojo.product.ProductBean;
+import www.yema.cn.pojo.product.Results;
+import www.yema.cn.request.ConponRequest;
+import www.yema.cn.response.ConponResponse;
+import www.yema.cn.response.ProductResponse;
+import www.yema.cn.service.alimama.IAlimamaService;
+import www.yema.cn.service.parse.IProductIdParse;
 
 import com.alibaba.fastjson.JSON;
 import com.taobao.api.ApiException;
@@ -17,22 +36,11 @@ import com.taobao.api.response.TbkDgMaterialOptionalResponse;
 import com.taobao.api.response.TbkItemInfoGetResponse;
 import com.taobao.api.response.TbkTpwdCreateResponse;
 
-import www.yema.cn.pojo.conpon.ConponBean;
-import www.yema.cn.pojo.conpon.Map_data;
-import www.yema.cn.pojo.conpon.Result_list;
-import www.yema.cn.pojo.generateShare.Data;
-import www.yema.cn.pojo.generateShare.GenerateShare;
-import www.yema.cn.pojo.product.N_tbk_item;
-import www.yema.cn.pojo.product.ProductBean;
-import www.yema.cn.pojo.product.Results;
-import www.yema.cn.service.alimama.IAlimamaService;
-import www.yema.cn.service.parse.IProductIdParse;
-import www.yema.cn.vo.ConponVo;
-import www.yema.cn.vo.ProductVo;
-
 @Service
 public class AlimamaServiceImpl implements IAlimamaService{
 	
+    private static final Logger logger = LoggerFactory.getLogger(AlimamaServiceImpl.class);
+    
 	@Resource(name="mmfadProductIdParse")
 	private IProductIdParse productIdParse;
 	
@@ -48,8 +56,8 @@ public class AlimamaServiceImpl implements IAlimamaService{
 	}
 
 	@Override
-	public ProductVo getProductTitle(String productId) {
-		ProductVo productVo=null;
+	public ProductResponse getProductInfo(String productId) {
+		ProductResponse productVo=null;
 		try {
 			TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);		
 			TbkItemInfoGetRequest req = new TbkItemInfoGetRequest();
@@ -60,10 +68,11 @@ public class AlimamaServiceImpl implements IAlimamaService{
 			ProductBean infoDo = JSON.parseObject(body, ProductBean.class);		
 			Results results=infoDo.getTbk_item_info_get_response().getResults();
 			N_tbk_item item=results.getN_tbk_item().get(0);
-			productVo=new ProductVo();
+			productVo=new ProductResponse();
 			productVo.setTitle(item.getTitle());
 			productVo.setPictUrl(item.getPict_url());
 			productVo.setReservePrice(item.getReserve_price());
+			productVo.setItemUrl(item.getItem_url());
 		} catch (ApiException e) {
 			
 		}
@@ -71,35 +80,41 @@ public class AlimamaServiceImpl implements IAlimamaService{
 	}
 
 	@Override
-	public ConponVo getConpon(String productTitle, String productId) {
-		ConponVo conponVo=null;
+	public List<ConponResponse> getConpon(ConponRequest conponRequest) {	  
+	    List<ConponResponse> conponList=new ArrayList<ConponResponse>();
 		try {
 			TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 			TbkDgMaterialOptionalRequest req = new TbkDgMaterialOptionalRequest();
-			req.setQ(productTitle);
-			req.setHasCoupon(true);
+			req.setQ(conponRequest.getQuery());
+			req.setHasCoupon(conponRequest.isHasCoupon());		
 			req.setAdzoneId(60129500330L);
 			TbkDgMaterialOptionalResponse response = client.execute(req);
 			String body=response.getBody();		
 			System.out.println(body);
-			ConponBean conponBean=JSON.parseObject(body, ConponBean.class);
-			Result_list result_list=conponBean.getTbk_dg_material_optional_response().getResult_list();
-			List<Map_data> list=result_list.getMap_data();
-			conponVo=new ConponVo();
-			for(Map_data data:list) {
-				String num_iid=String.valueOf(data.getNum_iid());
-				if(productId.equals(num_iid)) {
-					conponVo.setCouponShareUrl("https:"+data.getCoupon_share_url());
-					conponVo.setCouponId(data.getCoupon_id());
-					conponVo.setCouponInfo(data.getCoupon_info());
-				}
+			ConponBean conponBean=JSON.parseObject(body, ConponBean.class);	
+			Tbk_dg_material_optional_response conponresponse=conponBean.getTbk_dg_material_optional_response();
+			if(conponresponse==null){
+			  throw new RuntimeException("查询无结果"); 
 			}
-			
+			Result_list result_list=conponresponse.getResult_list();
+			List<Map_data> list=result_list.getMap_data();			
+			for(Map_data data:list) {
+			    ConponResponse conponVo=new ConponResponse();
+			    conponVo.setProductId(String.valueOf(data.getNum_iid()));
+			   if (StringUtils.isNotBlank(data.getCoupon_share_url())){
+			       conponVo.setCouponShareUrl("https:"+data.getCoupon_share_url());
+			    }
+			   if (StringUtils.isNotBlank(data.getUrl())){
+			       conponVo.setShareUrl("https:"+data.getUrl());
+                }				
+				conponVo.setCouponId(data.getCoupon_id());
+				conponVo.setCouponInfo(data.getCoupon_info());						
+				conponList.add(conponVo);
+			}			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    throw new RuntimeException("查询无结果"); 
 		}
-		return conponVo;
+		return conponList;
 	}
 
 	@Override

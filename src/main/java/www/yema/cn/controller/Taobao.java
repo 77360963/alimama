@@ -18,22 +18,25 @@ public class Taobao {
     @Autowired
     private AlimamaManager alimamaManager;
     
-    @RequestMapping(value = "/tk/{id}/api",method = RequestMethod.GET)
-    public String login(@PathVariable(name = "id") String id, @RequestParam(name = "name") String name){
-        System.out.println("id="+id);
-        System.out.println("name="+name);
-        return "login登录界面000";
+    @RequestMapping(value = "/tk",method = RequestMethod.GET)
+    public String login(String content){
+        System.out.println("======================");
+        System.out.println(content);
+        
+        String share=alimamaManager.getProductShareUrl(content);
+        
+        return "{\"rs\":1,\"tip\":\""+share+"\",\"end\":0}";
     }
     
     @RequestMapping(value = "/",method = RequestMethod.POST)
     public String alimama(String content) throws ApiException{
     	
-    	String context=UnicodeUtil.unicodetoString(content);
+    	//String context=UnicodeUtil.unicodetoString(content);
     	
     	System.out.println("======================");
     	System.out.println(content);
     	
-    	String share=alimamaManager.getProductShareUrl(context);
+    	String share=alimamaManager.getProductShareUrl(content);
     	
         return "{\"rs\":1,\"tip\":\""+share+"\",\"end\":0}";
     	
