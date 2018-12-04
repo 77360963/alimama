@@ -1,5 +1,6 @@
 package www.yema.cn.service.alimama.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,31 +11,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.taobao.api.ApiException;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
+import com.taobao.api.request.TbkCouponGetRequest;
+import com.taobao.api.request.TbkDgMaterialOptionalRequest;
+import com.taobao.api.request.TbkItemInfoGetRequest;
+import com.taobao.api.request.TbkTpwdCreateRequest;
+import com.taobao.api.response.TbkCouponGetResponse;
+import com.taobao.api.response.TbkDgMaterialOptionalResponse;
+import com.taobao.api.response.TbkItemInfoGetResponse;
+import com.taobao.api.response.TbkTpwdCreateResponse;
+
 import www.yema.cn.pojo.conpon.ConponBean;
 import www.yema.cn.pojo.conpon.Map_data;
 import www.yema.cn.pojo.conpon.Result_list;
 import www.yema.cn.pojo.conpon.Tbk_dg_material_optional_response;
+import www.yema.cn.pojo.conponDetail.ConponDetailBean;
+import www.yema.cn.pojo.conponDetail.Tbk_coupon_get_response;
 import www.yema.cn.pojo.generateShare.Data;
 import www.yema.cn.pojo.generateShare.GenerateShare;
 import www.yema.cn.pojo.product.N_tbk_item;
 import www.yema.cn.pojo.product.ProductBean;
 import www.yema.cn.pojo.product.Results;
 import www.yema.cn.request.ConponRequest;
+import www.yema.cn.response.ConponDetailResponse;
 import www.yema.cn.response.ConponResponse;
 import www.yema.cn.response.ProductResponse;
 import www.yema.cn.service.alimama.IAlimamaService;
 import www.yema.cn.service.parse.IProductIdParse;
-
-import com.alibaba.fastjson.JSON;
-import com.taobao.api.ApiException;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.TbkDgMaterialOptionalRequest;
-import com.taobao.api.request.TbkItemInfoGetRequest;
-import com.taobao.api.request.TbkTpwdCreateRequest;
-import com.taobao.api.response.TbkDgMaterialOptionalResponse;
-import com.taobao.api.response.TbkItemInfoGetResponse;
-import com.taobao.api.response.TbkTpwdCreateResponse;
 
 @Service
 public class AlimamaServiceImpl implements IAlimamaService{
@@ -72,6 +78,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 			productVo.setTitle(item.getTitle());
 			productVo.setPictUrl(item.getPict_url());
 			productVo.setReservePrice(item.getReserve_price());
+			productVo.setZkFinalPrice(item.getZk_final_price());
 			productVo.setItemUrl(item.getItem_url());
 		} catch (ApiException e) {
 			
@@ -116,6 +123,29 @@ public class AlimamaServiceImpl implements IAlimamaService{
 		}
 		return conponList;
 	}
+	
+	@Override
+	public ConponDetailResponse getConponDetail(String productId, String couponId) {
+		ConponDetailResponse conponDetailResponse=new ConponDetailResponse();		
+		try {
+			TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
+			TbkCouponGetRequest req = new TbkCouponGetRequest();
+			req.setItemId(Long.valueOf(productId));
+			req.setActivityId(couponId);
+			TbkCouponGetResponse response = client.execute(req);
+			String body=response.getBody();	
+			ConponDetailBean conponDetailBean=JSON.parseObject(body, ConponDetailBean.class);
+			Tbk_coupon_get_response tbk_coupon_get_response=conponDetailBean.getTbk_coupon_get_response();
+			www.yema.cn.pojo.conponDetail.Data data=tbk_coupon_get_response.getData();
+			conponDetailResponse.setCouponAmount(new BigDecimal(data.getCoupon_amount()));
+		} catch (Exception e) {
+			
+		} 
+
+		return conponDetailResponse;
+	}
+	
+	
 
 	@Override
 	public String generateShare(String text,String logo,String productHref) {
@@ -138,5 +168,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 		}
 		return generateShareHref;
 	}
+
+	
 
 }

@@ -1,28 +1,35 @@
 package www.yema.cn.manager;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import www.yema.cn.request.ConponRequest;
+import www.yema.cn.response.ConponDetailResponse;
 import www.yema.cn.response.ConponResponse;
 import www.yema.cn.response.ProductResponse;
 import www.yema.cn.service.alimama.IAlimamaService;
+import www.yema.cn.service.alimama.impl.AlimamaServiceImpl;
 
 @Component
 public class AlimamaManager {
 	
+	 private static final Logger logger = LoggerFactory.getLogger(AlimamaServiceImpl.class);
+	
 	@Autowired
 	private IAlimamaService alimamaService;
 	
-	public String getProductShareUrl(String outShareContext) {	
-	    StringBuffer sb=new StringBuffer();
-        sb.append("－－－－查询结果－－－－").append("\\n");
+	public String getProductShareUrl(String outShareContext) {
+		String message="无优惠信息\\n";
 		ProductResponse productVo;
         ConponResponse productConpon;
-        String shareProductHref;
+        ConponDetailResponse conponDetailResponse=null;
+        String shareProductHref;       
         try {
             String productId=alimamaService.getProductIdByOutShareUrl(outShareContext);
             if(StringUtils.isBlank(productId)) {
@@ -51,6 +58,8 @@ public class AlimamaManager {
             String productShareUrl=productVo.getItemUrl();
             if(StringUtils.isNotBlank(productConpon.getCouponShareUrl())){
                 productShareUrl=productConpon.getCouponShareUrl();
+                //查询优惠券优惠金额
+                conponDetailResponse=alimamaService.getConponDetail(productId, productConpon.getCouponId());                
             }else{
                 productShareUrl=productConpon.getShareUrl();
             }
@@ -59,20 +68,39 @@ public class AlimamaManager {
             if(StringUtils.isBlank(productId)) {
             	throw new RuntimeException("生成商品优惠券异常");
             }
-            sb.append("【标题】").append(productVo.getTitle()).append("\\n");
-            sb.append("【宝贝原价】：").append(productVo.getReservePrice()).append("\\n");
-            sb.append("【优惠券信息】：").append(productConpon.getCouponInfo()).append("\\n");
-            sb.append("－－－－－－－－").append("\\n");
-            sb.append(shareProductHref).append("\\n");           
+            
+            message=getMessage(productVo,productConpon, conponDetailResponse,shareProductHref);
+                
         } catch (Exception e) {
-            sb.append("无优惠信息").append("\\n");
-        }
-        sb.append("－－－－－－－－").append("\\n");
-        sb.append("下单注意事项：").append("\\n");
-        sb.append("1.下单注意事项：").append("\\n");
-        sb.append("2.下单注意事项：").append("\\n");
+        	logger.error("获取优惠券异常",e);
+        }      
 			
-		return sb.toString();
+		return message;
 	}
+	
+	
+	public String getMessage(ProductResponse productVo,ConponResponse productConpon, ConponDetailResponse conponDetailResponse,String shareProductHref) {
+		 StringBuffer sb=new StringBuffer();
+	     sb.append("－－－－查询结果－－－－").append("\\n");
+	     sb.append("【标题】").append(productVo.getTitle()).append("\\n");
+         sb.append("【宝贝原价】：").append(productVo.getZkFinalPrice()).append("元\\n");
+         if(conponDetailResponse!=null) {
+        	 sb.append("【领优惠券】：").append(conponDetailResponse.getCouponAmount()).append("元\\n");
+             sb.append("【付费参考】：").append(new BigDecimal(productVo.getZkFinalPrice()).subtract(conponDetailResponse.getCouponAmount())).append("元\\n");
+         }
+        
+        //sb.append("【约返微信红包】：").append(productConpon.getCouponInfo()).append("\\n");
+         sb.append("－－－－－－－－").append("\\n");
+         sb.append(shareProductHref).append("\\n");
+         sb.append("－－－－－－－－").append("\\n");
+         sb.append("下单注意事项：").append("\\n");
+         sb.append("复制上面内容到淘宝即可").append("\\n");
+         //sb.append("①不要使用红包抵扣 （会使返利失效）").append("\\n");
+         //sb.append("②下单后没提示【付款成功】的（复制订单号来绑定）").append("\\n");
+         return sb.toString();
+	}
+	
+	
+	
 
 }

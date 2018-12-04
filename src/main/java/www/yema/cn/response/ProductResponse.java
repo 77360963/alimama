@@ -17,6 +17,12 @@ public class ProductResponse {
      */
 	private String reservePrice;
 	
+	
+	/**
+	 * 折扣价格
+	 */
+	private String zkFinalPrice;
+	
 	/**
 	 * 商品URL
 	 */
@@ -53,5 +59,14 @@ public class ProductResponse {
     public void setItemUrl(String itemUrl) {
         this.itemUrl = itemUrl;
     }
+
+	public String getZkFinalPrice() {
+		return zkFinalPrice;
+	}
+
+	public void setZkFinalPrice(String zkFinalPrice) {
+		this.zkFinalPrice = zkFinalPrice;
+	}
+    
 
 }

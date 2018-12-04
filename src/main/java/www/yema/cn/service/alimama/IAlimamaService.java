@@ -3,6 +3,7 @@ package www.yema.cn.service.alimama;
 import java.util.List;
 
 import www.yema.cn.request.ConponRequest;
+import www.yema.cn.response.ConponDetailResponse;
 import www.yema.cn.response.ConponResponse;
 import www.yema.cn.response.ProductResponse;
 
@@ -28,6 +29,16 @@ public interface IAlimamaService {
 	 * @return
 	 */
 	public List<ConponResponse> getConpon(ConponRequest conponRequest);
+	
+	
+	/**
+	 * 获取优惠券详细信息
+	 * @param productId
+	 * @param couponId
+	 * @return
+	 */
+	public ConponDetailResponse getConponDetail(String productId,String couponId);
+	
 	
 	/**
 	 * 生成推荐者的淘口令

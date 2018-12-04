@@ -1,10 +1,8 @@
 package www.yema.cn.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taobao.api.ApiException;
@@ -18,25 +16,22 @@ public class Taobao {
     @Autowired
     private AlimamaManager alimamaManager;
     
-    @RequestMapping(value = "/tk",method = RequestMethod.GET)
-    public String login(String content){
+    @RequestMapping(value = "/",method = RequestMethod.GET)
+    public String login(){
         System.out.println("======================");
-        System.out.println(content);
-        
-        String share=alimamaManager.getProductShareUrl(content);
-        
-        return "{\"rs\":1,\"tip\":\""+share+"\",\"end\":0}";
+      
+        return "启动正常";
     }
     
     @RequestMapping(value = "/",method = RequestMethod.POST)
     public String alimama(String content) throws ApiException{
     	
-    	//String context=UnicodeUtil.unicodetoString(content);
+    	String context=UnicodeUtil.unicodetoString(content);
     	
     	System.out.println("======================");
     	System.out.println(content);
     	
-    	String share=alimamaManager.getProductShareUrl(content);
+    	String share=alimamaManager.getProductShareUrl(context);
     	
         return "{\"rs\":1,\"tip\":\""+share+"\",\"end\":0}";
     	

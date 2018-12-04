@@ -5,7 +5,8 @@ public class ConponResponse {
     /**
      * 商品Id
      */
-    private String productId;
+    private String productId;    
+    
 	
 	/**
 	 * 优惠券Id
