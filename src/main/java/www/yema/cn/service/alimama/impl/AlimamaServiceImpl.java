@@ -9,20 +9,8 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
-import com.taobao.api.ApiException;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.TbkCouponGetRequest;
-import com.taobao.api.request.TbkDgMaterialOptionalRequest;
-import com.taobao.api.request.TbkItemInfoGetRequest;
-import com.taobao.api.request.TbkTpwdCreateRequest;
-import com.taobao.api.response.TbkCouponGetResponse;
-import com.taobao.api.response.TbkDgMaterialOptionalResponse;
-import com.taobao.api.response.TbkItemInfoGetResponse;
-import com.taobao.api.response.TbkTpwdCreateResponse;
 
 import www.yema.cn.pojo.conpon.ConponBean;
 import www.yema.cn.pojo.conpon.Map_data;
@@ -42,6 +30,19 @@ import www.yema.cn.response.ProductResponse;
 import www.yema.cn.service.alimama.IAlimamaService;
 import www.yema.cn.service.parse.IProductIdParse;
 
+import com.alibaba.fastjson.JSON;
+import com.taobao.api.ApiException;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
+import com.taobao.api.request.TbkCouponGetRequest;
+import com.taobao.api.request.TbkDgMaterialOptionalRequest;
+import com.taobao.api.request.TbkItemInfoGetRequest;
+import com.taobao.api.request.TbkTpwdCreateRequest;
+import com.taobao.api.response.TbkCouponGetResponse;
+import com.taobao.api.response.TbkDgMaterialOptionalResponse;
+import com.taobao.api.response.TbkItemInfoGetResponse;
+import com.taobao.api.response.TbkTpwdCreateResponse;
+
 @Service
 public class AlimamaServiceImpl implements IAlimamaService{
 	
@@ -53,7 +54,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 	public static String url="http://gw.api.taobao.com/router/rest";
 	public static String appkey="25245534";
 	public static String secret="391965a3c847eec1018cfe941f0d8221";
-	
+	public static final String ALIMAMA_CACHE_NAME = "alimama";
 
 	@Override
 	public String getProductIdByOutShareUrl(String outShareContext) {
@@ -62,6 +63,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 	}
 
 	@Override
+	@Cacheable(value="userCacheUserId",key="#productId+'key'",cacheManager="ehCacheCacheManager")
 	public ProductResponse getProductInfo(String productId) {
 		ProductResponse productVo=null;
 		try {

@@ -44,8 +44,32 @@
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
 		</dependency>
-
-
-
+		
+		<dependency>
+         <groupId>com.alipay</groupId>
+         <artifactId>sdk-java</artifactId>
+         <version>20170307171631</version>
+   </dependency>
+		
 	</dependencies>
+
+	<build>
+		<finalName>taoke</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>www.yema.cn.AppBootStart</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
