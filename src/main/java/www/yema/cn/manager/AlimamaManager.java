@@ -14,17 +14,17 @@ import www.yema.cn.response.ConponDetailResponse;
 import www.yema.cn.response.ConponResponse;
 import www.yema.cn.response.ProductResponse;
 import www.yema.cn.service.alimama.IAlimamaService;
-import www.yema.cn.service.alimama.impl.AlimamaServiceImpl;
 
 @Component
 public class AlimamaManager {
 	
-	 private static final Logger logger = LoggerFactory.getLogger(AlimamaServiceImpl.class);
+	 private static final Logger logger = LoggerFactory.getLogger(AlimamaManager.class);
 	
 	@Autowired
 	private IAlimamaService alimamaService;
 	
 	public String getProductShareUrl(String outShareContext) {
+	    logger.info("集成查询,outShareContext={}",outShareContext);
 		String message="无优惠信息\\n";
 		ProductResponse productVo;
         ConponResponse productConpon;

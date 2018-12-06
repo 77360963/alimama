@@ -132,6 +132,23 @@ public class HttpClientUtil {
 		}
 		return responseContent;
 	}
+	
+	  /** 
+     * 发送 post请求 
+     * @param httpUrl 地址 
+     * @param maps 参数 
+     */  
+    public String sendHttpPost(String httpUrl, Map<String, String> headerMaps,String body,String contentType) {  
+        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost    
+        for (String key : headerMaps.keySet()) {  
+            httpPost.addHeader(key, headerMaps.get(key));
+        }              
+        StringEntity stringEntity = new StringEntity(body, "UTF-8");  
+        stringEntity.setContentType(contentType);  
+        httpPost.setEntity(stringEntity);            
+        return sendHttpPost(httpPost);  
+    }  
+	
 
 	/**
 	 * 发送 get请求

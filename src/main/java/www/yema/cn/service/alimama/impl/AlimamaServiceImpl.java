@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -58,13 +60,14 @@ public class AlimamaServiceImpl implements IAlimamaService{
 
 	@Override
 	public String getProductIdByOutShareUrl(String outShareContext) {
+	    logger.info("getProductIdByOutShareUrl请求参数={}",outShareContext);
 		String productId= productIdParse.getProductId(outShareContext);
 		return productId;
 	}
 
-	@Override
-	@Cacheable(value="userCacheUserId",key="#productId+'key'",cacheManager="ehCacheCacheManager")
+	@Override	
 	public ProductResponse getProductInfo(String productId) {
+	    logger.info("getProductInfo请求参数={}",productId);
 		ProductResponse productVo=null;
 		try {
 			TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);		
@@ -89,7 +92,8 @@ public class AlimamaServiceImpl implements IAlimamaService{
 	}
 
 	@Override
-	public List<ConponResponse> getConpon(ConponRequest conponRequest) {	  
+	public List<ConponResponse> getConpon(ConponRequest conponRequest) {	 
+	    logger.info("getConpon请求参数={}", ToStringBuilder.reflectionToString(conponRequest, ToStringStyle.MULTI_LINE_STYLE));
 	    List<ConponResponse> conponList=new ArrayList<ConponResponse>();
 		try {
 			TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
@@ -128,6 +132,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 	
 	@Override
 	public ConponDetailResponse getConponDetail(String productId, String couponId) {
+	    logger.info("getConponDetail请求参数,productId={},couponId={}",productId,couponId);
 		ConponDetailResponse conponDetailResponse=new ConponDetailResponse();		
 		try {
 			TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
@@ -151,6 +156,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 
 	@Override
 	public String generateShare(String text,String logo,String productHref) {
+	    logger.info("generateShare请求参数,productHref={}",productHref);
 		String generateShareHref=null;
 		try {
 			TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
