@@ -46,5 +46,14 @@ public interface IAlimamaService {
 	 * @return
 	 */
 	public String generateShare(String text,String logo,String productHref);
+	
+	
+	/**
+	 * 查询阿里妈妈订单
+	 * @param startTime
+	 * @param session
+	 */
+	public void queryAimamaOrder(String startTime,String session);
+	
 
 }

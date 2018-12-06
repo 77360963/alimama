@@ -2,6 +2,7 @@ package www.yema.cn.service.alimama.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,8 +12,21 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.taobao.api.ApiException;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
+import com.taobao.api.request.TbkCouponGetRequest;
+import com.taobao.api.request.TbkDgMaterialOptionalRequest;
+import com.taobao.api.request.TbkItemInfoGetRequest;
+import com.taobao.api.request.TbkTpwdCreateRequest;
+import com.taobao.api.response.TbkCouponGetResponse;
+import com.taobao.api.response.TbkDgMaterialOptionalResponse;
+import com.taobao.api.response.TbkItemInfoGetResponse;
+import com.taobao.api.response.TbkTpwdCreateResponse;
 
 import www.yema.cn.pojo.conpon.ConponBean;
 import www.yema.cn.pojo.conpon.Map_data;
@@ -31,19 +45,7 @@ import www.yema.cn.response.ConponResponse;
 import www.yema.cn.response.ProductResponse;
 import www.yema.cn.service.alimama.IAlimamaService;
 import www.yema.cn.service.parse.IProductIdParse;
-
-import com.alibaba.fastjson.JSON;
-import com.taobao.api.ApiException;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.TbkCouponGetRequest;
-import com.taobao.api.request.TbkDgMaterialOptionalRequest;
-import com.taobao.api.request.TbkItemInfoGetRequest;
-import com.taobao.api.request.TbkTpwdCreateRequest;
-import com.taobao.api.response.TbkCouponGetResponse;
-import com.taobao.api.response.TbkDgMaterialOptionalResponse;
-import com.taobao.api.response.TbkItemInfoGetResponse;
-import com.taobao.api.response.TbkTpwdCreateResponse;
+import www.yema.cn.utils.HttpClientUtil;
 
 @Service
 public class AlimamaServiceImpl implements IAlimamaService{
@@ -177,6 +179,21 @@ public class AlimamaServiceImpl implements IAlimamaService{
 		return generateShareHref;
 	}
 
+	
+	public  void queryAimamaOrder(String startTime,String session) {
+		String httpUrl="http://gateway.kouss.com/tbpub/orderGet";
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("fields", "tb_trade_parent_id,tk_status,tb_trade_id,num_iid,item_title,item_num,price,pay_price,seller_nick,seller_shop_title,commission,commission_rate,unid,create_time,earning_time,tk3rd_pub_id,tk3rd_site_id,tk3rd_adzone_id,relation_id");
+		jsonObject.put("start_time", startTime);
+		jsonObject.put("span", 1200);
+		jsonObject.put("page_size", 100);
+		jsonObject.put("tk_status", 1);
+		jsonObject.put("order_query_type", "create_time");
+		jsonObject.put("session", session);		
+		String requestBody=jsonObject.toJSONString();		
+		String body=HttpClientUtil.getInstance().sendHttpPost(httpUrl, new HashMap(), requestBody, "application/json");
+		System.out.println(body);
+	}
 	
 
 }

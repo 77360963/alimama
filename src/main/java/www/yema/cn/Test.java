@@ -1,9 +1,5 @@
 package www.yema.cn;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import www.yema.cn.utils.HttpClientUtil;
 import www.yema.cn.utils.UnicodeUtil;
 
 public class Test {
@@ -23,6 +19,8 @@ public class Test {
 		maps.put("k", "￥gvTyblx9az2￥");        
 		String body=HttpClientUtil.getInstance().sendHttpPost(httpUrl, maps);     
 		System.out.println(body);*/
+		
+	
 
 	}
 

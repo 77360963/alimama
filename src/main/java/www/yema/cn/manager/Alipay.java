@@ -177,9 +177,9 @@ public class Alipay {
 		//String Conpon=getConpon("https://detail.tmall.com/item.htm?id=580005845251");
 		
 	    //4.获取推广
-		String generate=generateShare( "https://s.click.taobao.com/t?e=m=2&s=ZFwr0s1u5u4cQipKwQzePOeEDrYVVa64r4ll3HtqqoxyINtkUhsv0OJLaroXyzbsn0VGlIPb7USFcmYXXLluy68FHzwBdWokczuL0JQjXe1OnWMaFs0m5vAy/ay3dFHhT71z1SCuevui5SPojJP5jQcJF/lBkX5mkRIxIi9Kdk7qS/XCXzX7tYiN0ijCHW6y9RgW3atW8fxK5EQ/mGhs0MYl7w3/A2kb&scm=null&pvid=100_11.182.43.223_161229_1561543906337551863&app_pvid=59590_11.11.115.140_35458_1543906337544&ptl=floorId:2836;pvid:100_11.182.43.223_161229_1561543906337551863;app_pvid:59590_11.11.115.140_35458_1543906337544&union_lens=lensId:0b0b738c_80a0_16777fd231d_ad6e");
+		String generate=generateShare( "https://uland.taobao.com/coupon/edetail?e=VvT9MqI5YnAGQASttHIRqXVnheNvRMzcSkOumMn%2FXnHM11NUiBsZhcmu0sljpWBxgxIZ0EJ0ZlcGPv5injop9DEhJpUUrcnYV6UtQ6J03JSkaXRx42EY6nY9x3IctcCWLspxGy3zBjY8IeN8lvhRA2lzrR4%2Bfrcb2XhfVVaMpqFKpJAe%2BKfsgAsQnXi07uUv&traceId=0b0af2ec15440271491014059e&union_lens=lensId:0b0175f0_0c32_1677f309341_abd7");
 		
-		//System.out.println(generate);
+		System.out.println(generate);
 
 	}
 

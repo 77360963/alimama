@@ -49,7 +49,9 @@
          <groupId>com.alipay</groupId>
          <artifactId>sdk-java</artifactId>
          <version>20170307171631</version>
-   </dependency>
+         <scope>system</scope>
+         <systemPath>d:/taobao-sdk-java-auto_1457166217151-20181202.jar</systemPath>
+         </dependency>
 		
 	</dependencies>
 
@@ -61,6 +63,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<mainClass>www.yema.cn.AppBootStart</mainClass>
+					 <includeSystemScope>true</includeSystemScope>
 				</configuration>
 				<executions>
 					<execution>
