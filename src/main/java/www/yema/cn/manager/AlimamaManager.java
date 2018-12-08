@@ -23,6 +23,30 @@ public class AlimamaManager {
 	@Autowired
 	private IAlimamaService alimamaService;
 	
+	
+	/**
+	 * 判断内容中是否有淘口令
+	 * @param context
+	 * @return
+	 */
+	public String getTaoKouLing(String context) {
+		int firstIndex=context.indexOf("￥");
+		int lastIndex=context.lastIndexOf("￥")+1;
+		if(firstIndex==-1) {
+			return "";
+		}
+		if(firstIndex==lastIndex) {
+			return "";
+		}
+		String taokouling=context.substring(firstIndex, lastIndex);
+		return taokouling;
+	}
+	
+	/**
+	 * 获取自己的淘口令
+	 * @param outShareContext
+	 * @return
+	 */
 	public String getProductShareUrl(String outShareContext) {
 	    logger.info("集成查询,outShareContext={}",outShareContext);
 		String message="无优惠信息\\n";
@@ -57,9 +81,12 @@ public class AlimamaManager {
             
             String productShareUrl=productVo.getItemUrl();
             if(StringUtils.isNotBlank(productConpon.getCouponShareUrl())){
-                productShareUrl=productConpon.getCouponShareUrl();
+                productShareUrl=productConpon.getCouponShareUrl();               
                 //查询优惠券优惠金额
-                conponDetailResponse=alimamaService.getConponDetail(productId, productConpon.getCouponId());                
+                conponDetailResponse=alimamaService.getConponDetail(productId, productConpon.getCouponId()); 
+                logger.info("交易金额"+productVo.getZkFinalPrice());
+                logger.info("交易佣金比率"+productConpon.getCommissionRate());
+                logger.info("交易佣金"+(new BigDecimal(productVo.getZkFinalPrice()).subtract(conponDetailResponse.getCouponAmount())).multiply(productConpon.getCommissionRate()));                 
             }else{
                 productShareUrl=productConpon.getShareUrl();
             }

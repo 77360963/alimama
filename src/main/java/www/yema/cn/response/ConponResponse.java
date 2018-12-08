@@ -1,5 +1,7 @@
 package www.yema.cn.response;
 
+import java.math.BigDecimal;
+
 public class ConponResponse {
     
     /**
@@ -32,6 +34,11 @@ public class ConponResponse {
 	 * 优惠券信息
 	 */
 	private String couponInfo;
+	
+	/**
+	 * 佣金比例
+	 */
+	private BigDecimal commissionRate;
 
     public String getProductId() {
         return productId;
@@ -79,6 +86,19 @@ public class ConponResponse {
 
     public void setCouponInfo(String couponInfo) {
         this.couponInfo = couponInfo;
-    }	
+    }
+
+	public BigDecimal getCommissionRate() {
+		return commissionRate;
+	}
+
+	public void setCommissionRate(BigDecimal commissionRate) {
+		this.commissionRate = commissionRate;
+	}
+
+	
+	
+    
+    
 
 }

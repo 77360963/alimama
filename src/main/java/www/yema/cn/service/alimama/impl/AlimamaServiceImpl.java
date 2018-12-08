@@ -77,7 +77,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 			req.setNumIids(productId);
 			TbkItemInfoGetResponse response = client.execute(req);
 			String body=response.getBody();	
-			//System.out.println(body);		
+			logger.info("商品详情信息={}",body);	
 			ProductBean infoDo = JSON.parseObject(body, ProductBean.class);		
 			Results results=infoDo.getTbk_item_info_get_response().getResults();
 			N_tbk_item item=results.getN_tbk_item().get(0);
@@ -105,7 +105,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 			req.setAdzoneId(60129500330L);
 			TbkDgMaterialOptionalResponse response = client.execute(req);
 			String body=response.getBody();		
-			System.out.println(body);
+			logger.info("商品优惠券信息={}",body);	
 			ConponBean conponBean=JSON.parseObject(body, ConponBean.class);	
 			Tbk_dg_material_optional_response conponresponse=conponBean.getTbk_dg_material_optional_response();
 			if(conponresponse==null){
@@ -123,7 +123,8 @@ public class AlimamaServiceImpl implements IAlimamaService{
 			       conponVo.setShareUrl("https:"+data.getUrl());
                 }				
 				conponVo.setCouponId(data.getCoupon_id());
-				conponVo.setCouponInfo(data.getCoupon_info());						
+				conponVo.setCouponInfo(data.getCoupon_info());	
+				conponVo.setCommissionRate(new BigDecimal(data.getCommission_rate()).divide(new BigDecimal("10000")));
 				conponList.add(conponVo);
 			}			
 		} catch (Exception e) {
@@ -143,6 +144,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 			req.setActivityId(couponId);
 			TbkCouponGetResponse response = client.execute(req);
 			String body=response.getBody();	
+			logger.info("商品优惠券详情信息={}",body);	
 			ConponDetailBean conponDetailBean=JSON.parseObject(body, ConponDetailBean.class);
 			Tbk_coupon_get_response tbk_coupon_get_response=conponDetailBean.getTbk_coupon_get_response();
 			www.yema.cn.pojo.conponDetail.Data data=tbk_coupon_get_response.getData();
@@ -168,7 +170,7 @@ public class AlimamaServiceImpl implements IAlimamaService{
 			req.setLogo(logo);
 			TbkTpwdCreateResponse response = client.execute(req);
 			String body=response.getBody();		
-			//System.out.println(body);
+			logger.info("生成自己淘口令信息={}",body);	
 			GenerateShare generateShare=JSON.parseObject(body, GenerateShare.class);
 			Data data=generateShare.getTbk_tpwd_create_response().getData();
 			generateShareHref = data.getModel();
