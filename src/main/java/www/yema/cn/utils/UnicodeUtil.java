@@ -1,5 +1,8 @@
 package www.yema.cn.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class UnicodeUtil {
 	
 	public static String unicodetoString(String unicode){  
@@ -29,6 +32,32 @@ public class UnicodeUtil {
 		}
 		return unicode.toString();
 	}
+	
+	
+	/**
+	 * 转码    %u554A 转成  啊
+	 * @param src
+	 * @return
+	 */
+	public static String unescape(String src) {
+		Pattern pattern = Pattern.compile("%u[0-9a-fA-F]{4}");
+		Matcher macher = pattern.matcher(src);
+		StringBuffer buffer = new StringBuffer();
+		int start = 0;
+		while (macher.find()) {
+			buffer.append(src, start, macher.start());
+			start = macher.start();
+			String code = src.substring(start + 2, start + 6);
+			char ch = (char) Integer.parseInt(code, 16);
+			buffer.append(ch);
+			start = macher.end();
+		}
+		buffer.append(src, start, src.length());
+		return buffer.toString();
+	}
+
+	
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String s = stringtoUnicode("中文");
